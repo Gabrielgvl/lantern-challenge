@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@prisma/client": "2.26.0",
+    "await-to-js": "3.0.0",
     "axios": "0.21.1",
     "blitz": "0.38.5",
     "concurrently": "6.2.0",

@@ -1,13 +1,17 @@
 import { paginate, resolver } from "blitz";
 import db, { Prisma } from "db";
+import { z } from "zod";
 
 interface GetAmountWalletsInput
-  extends Pick<Prisma.AmountWalletFindManyArgs, "where" | "orderBy" | "skip" | "take"> {}
+  extends Pick<Prisma.AmountWalletFindManyArgs, "orderBy" | "skip" | "take"> {
+  walletId: string;
+}
 
 export default resolver.pipe(
   resolver.authorize(),
-  async ({ where, orderBy, skip = 0, take = 100 }: GetAmountWalletsInput) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+  async ({ walletId, orderBy, skip = 0, take = 100 }: GetAmountWalletsInput) => {
+    const where = { walletId };
+
     const {
       items: amountWallets,
       hasMore,

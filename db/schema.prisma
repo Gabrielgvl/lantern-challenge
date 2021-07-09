@@ -75,7 +75,6 @@ model AmountWallet {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   amount     Decimal
-  float      String
   currency   Currency @relation(fields: [currencyId], references: [id])
   currencyId String
   Wallet     Wallet?  @relation(fields: [walletId], references: [id])
@@ -87,9 +86,8 @@ model Wallet {
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   defaultCurrency Currency       @relation(fields: [currencyId], references: [id])
-  permalink       String
+  currencyId      String
   user            User           @relation(fields: [userId], references: [id])
   userId          String
   amount          AmountWallet[]
-  currencyId      String
 }

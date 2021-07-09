@@ -3,12 +3,17 @@ import db from "db";
 import { z } from "zod";
 
 const CreateWallet = z.object({
-  name: z.string(),
+  defaultCurrencyId: z.string(),
 });
 
-export default resolver.pipe(resolver.zod(CreateWallet), resolver.authorize(), async (input) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const wallet = await db.wallet.create({ data: input });
+export default resolver.pipe(
+  resolver.zod(CreateWallet),
+  resolver.authorize(),
+  async ({ defaultCurrencyId }, { session }) => {
+    const wallet = await db.wallet.create({
+      data: { currencyId: defaultCurrencyId, userId: session.userId },
+    });
 
-  return wallet;
-});
+    return wallet;
+  }
+);

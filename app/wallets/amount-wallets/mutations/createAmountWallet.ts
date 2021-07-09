@@ -3,7 +3,9 @@ import db from "db";
 import { z } from "zod";
 
 const CreateAmountWallet = z.object({
-  name: z.string(),
+  amount: z.number(),
+  currencyId: z.string(),
+  walletId: z.string(),
 });
 
 export default resolver.pipe(
