@@ -1,5 +1,5 @@
 import { Link, useRouter, useMutation, BlitzPage, Routes } from "blitz";
-import Layout from "app/core/layouts/Layout";
+import Layout from "app/core/layouts/MainLayout";
 import createWallet from "app/wallets/mutations/createWallet";
 import { WalletForm, FORM_ERROR } from "app/wallets/components/WalletForm";
 
