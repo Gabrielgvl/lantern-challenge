@@ -1,21 +1,12 @@
 import classNames from "classnames";
-import { FC, Suspense, useState } from "react";
-import Navbar from "../Navbar";
-import { Link, Routes, useMutation, useRouter, useSession } from "blitz";
-import logout from "app/auth/mutations/logout";
+import { FC, Suspense } from "react";
+import { Link, Routes, useSession } from "blitz";
 import UserMenu from "./UserMenu";
 import Sidebar from "../Sidebar";
 import { Button } from "@material-ui/core";
 
 const HeaderContent = () => {
   const session = useSession();
-  const [logOut] = useMutation(logout);
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    await logOut();
-    router.push(Routes.Home());
-  };
 
   return (
     <>
@@ -40,7 +31,7 @@ const Header: FC = () => {
   return (
     <header
       className={classNames(
-        "flex sticky w-full top-0 justify-between z-50 items-center h-16 text-indigo-400 bg-gray-800 px-1 gap-8 shadow-md"
+        "flex sticky w-full top-0 justify-between z-50 items-center h-16 text-indigo-400 bg-gray-800 px-2 gap-8 shadow-md"
       )}
     >
       <Suspense fallback={""}>

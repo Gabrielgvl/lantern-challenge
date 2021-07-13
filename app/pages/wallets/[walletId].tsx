@@ -11,6 +11,7 @@ import getWalletTotal from "app/wallets/queries/getWalletTotal";
 import Form from "app/core/components/Form";
 import MoneyCountup from "app/core/components/MoneyCountup";
 import { Deposit } from "app/wallets/validations";
+import SettingsIcon from "@material-ui/icons/Settings";
 import createAmountWallet from "app/wallets/amount-wallets/mutations/createAmountWallet";
 
 export const Wallet = () => {
@@ -29,15 +30,18 @@ export const Wallet = () => {
         <title>My Wallet</title>
       </Head>
 
-      <section className="px-4 pt-4 flex justify-between flex-wrap items-center">
-        <h1 className="text-3xl font-bold w-full sm:w-auto">Your Wallet</h1>
-        <h2 className="text-xl">
+      <section className="px-4 pt-4 grid grid-cols-3 sm:flex sm:justify-between items-center justify-between">
+        <h1 className="text-3xl font-bold w-full sm:w-auto col-span-2">My Wallet</h1>
+        <IconButton className="justify-self-end row-span-2 sm:row-span-1 self-center sm:flex-grow sm:justify-self-end sm:order-last">
+          <SettingsIcon />
+        </IconButton>
+        <h2 className="text-xl col-span-2 sm:text-right sm:flex-1">
           Total: <MoneyCountup value={total} currency={defaultCurrency.symbol} />
         </h2>
       </section>
       <hr className="mx-4" />
       <section className="px-4 sm:w-1/2 sm:m-auto">
-        <h3 className="text-xl font-bold text-center">Deposit Money</h3>
+        <h3 className="text-xl font-bold text-center mb-4">Deposit Money</h3>
         <Form
           onSubmit={async ({ amount, currency }) => {
             if (!walletId) return;
