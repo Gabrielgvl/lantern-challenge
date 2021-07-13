@@ -1,6 +1,8 @@
+import { Decimal } from "@prisma/client/runtime";
+import to from "await-to-js";
 import { resolver, NotFoundError } from "blitz";
 import db from "db";
-import { getTotal } from "integrations/fixerAPI";
+import { getTotal } from "integrations/currencyAPI";
 import { z } from "zod";
 
 const GetWalletTotal = z.object({
@@ -15,7 +17,12 @@ export default resolver.pipe(resolver.zod(GetWalletTotal), resolver.authorize(),
 
   if (!wallet) throw new NotFoundError();
 
-  const symbols = wallet.amount.map((w) => w.currency.symbol);
+  const symbols = new Map<string, Decimal>(wallet.amount.map((w) => [w.currency.symbol, w.amount]));
 
-  return getTotal(wallet.defaultCurrency.symbol, symbols);
+  const total = await getTotal(wallet.defaultCurrency.symbol, symbols);
+
+  return {
+    total: total,
+    defaultCurrency: wallet.defaultCurrency,
+  };
 });

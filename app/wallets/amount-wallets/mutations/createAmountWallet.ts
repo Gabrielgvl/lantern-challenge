@@ -1,3 +1,4 @@
+import to from "await-to-js";
 import { resolver } from "blitz";
 import db from "db";
 import { z } from "zod";
@@ -12,9 +13,24 @@ export default resolver.pipe(
   resolver.zod(CreateAmountWallet),
   resolver.authorize(),
   async (input) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const amountWallet = await db.amountWallet.create({ data: input });
+    const updatedWallet = await db.amountWallet.findFirst({
+      where: { currencyId: input.currencyId, walletId: input.walletId },
+      include: { currency: true },
+    });
 
-    return amountWallet;
+    if (!updatedWallet) {
+      return await db.amountWallet.create({
+        data: input,
+        include: { currency: true },
+      });
+    }
+
+    return await db.amountWallet.update({
+      data: {
+        amount: updatedWallet.amount.plus(input.amount),
+      },
+      where: { id: updatedWallet.id },
+      include: { currency: true },
+    });
   }
 );

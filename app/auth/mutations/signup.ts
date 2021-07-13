@@ -16,7 +16,7 @@ export default resolver.pipe(
       data: { userId: user.id, currencyId: defaultCurrency.id },
     });
 
-    await ctx.session.$create({ userId: user.id, role: user.role as Role });
+    await ctx.session.$create({ userId: user.id, walletId: wallet.id, role: user.role as Role });
     return user;
   }
 );

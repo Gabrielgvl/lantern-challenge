@@ -1,5 +1,5 @@
 import db from "db";
-import { getSymbols } from "integrations/fixerAPI";
+import { getSymbols } from "integrations/currencyAPI";
 import { CronJob } from "quirrel/blitz";
 
 export default CronJob("api/retrieveAll", "@daily", async () => {

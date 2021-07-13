@@ -39,9 +39,7 @@ export const SignupForm = (props: SignupFormProps) => {
       >
         <FormTextField name="email" label="Email" placeholder="Email" type="email" />
         <FormTextField name="password" label="Password" placeholder="Password" type="password" />
-        <Suspense fallback="loadin">
-          <CurrencySelect />
-        </Suspense>
+        <CurrencySelect name="defaultCurrency" />
       </Form>
       <span className="mt-4">
         Or{" "}

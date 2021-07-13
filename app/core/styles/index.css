@@ -8,16 +8,6 @@
   }
 }
 
-.title {
-  @apply m-0 w-full pt-20;
-  font-size: 48px;
-}
-
-.title,
-.description {
-  @apply text-center;
-}
-
 a:focus,
 input:focus,
 textarea:focus,
@@ -40,13 +30,9 @@ html,
 body,
 #__next {
   -webkit-tap-highlight-color: transparent;
-  height: 100%;
-  overflow: auto;
-  overflow: initial;
-  display: flex;
-  flex-direction: column;
+  @apply h-full bg-indigo-600 text-white overflow-auto overflow-x-hidden;
 }
 
-button {
-  @apply bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-300 hover:text-black shadow-md focus-within:bg-indigo-300;
-}
+/* button {
+  @apply bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-300 hover:text-black shadow-md focus-within:bg-indigo-300 focus-within:text-black;
+} */

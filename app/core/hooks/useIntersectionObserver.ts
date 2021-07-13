@@ -24,7 +24,6 @@ export default function useIntersectionObserver<T extends HTMLElement, Root exte
     if (!enabled) {
       return;
     }
-    console.debug({ root, target });
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => entry.isIntersecting && onIntersect());

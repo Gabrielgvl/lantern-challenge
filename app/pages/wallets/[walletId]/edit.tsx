@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Routes } from "blitz";
 import Layout from "app/core/layouts/MainLayout";
-import getWallet from "app/wallets/queries/getWalletByUser";
+import getWallet from "app/wallets/queries/getWalletAmounts";
 import updateWallet from "app/wallets/mutations/updateWallet";
 import { WalletForm, FORM_ERROR } from "app/wallets/components/WalletForm";
 

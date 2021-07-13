@@ -1,0 +1,14 @@
+{
+  "amount": "1.0000",
+  "base_currency_code": "AUD",
+  "base_currency_name": "Australian Dollar",
+  "rates": {
+    "AUD": {
+      "currency_name": "Australian Dollar",
+      "rate": "1.0000",
+      "rate_for_amount": "1.0000"
+    }
+  },
+  "status": "success",
+  "updated_date": "2019-07-05"
+}

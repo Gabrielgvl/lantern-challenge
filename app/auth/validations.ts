@@ -1,8 +1,7 @@
+import { Currency } from "app/currencies/validations";
 import { z } from "zod";
 
 const password = z.string().min(6).max(100);
-
-const Currency = z.object({ id: z.string(), symbol: z.string(), description: z.string() });
 
 export const Signup = z.object({
   email: z.string().email(),

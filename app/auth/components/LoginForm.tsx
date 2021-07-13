@@ -4,7 +4,6 @@ import { Form, FORM_ERROR } from "app/core/components/Form";
 import login from "app/auth/mutations/login";
 import { Login } from "app/auth/validations";
 import FormCard from "app/auth/components/FormCard";
-import { TextField } from "@material-ui/core";
 
 type LoginFormProps = {
   onSuccess?: () => void;
@@ -20,6 +19,7 @@ export const LoginForm = (props: LoginFormProps) => {
         schema={Login}
         initialValues={{ email: "", password: "" }}
         onSubmit={async (values) => {
+          console.debug({ values });
           try {
             await loginMutation(values);
             props.onSuccess?.();
@@ -35,11 +35,8 @@ export const LoginForm = (props: LoginFormProps) => {
           }
         }}
       >
-        <TextField name="email" label="Email" placeholder="Email" type="email" />
-        <TextField name="password" label="Password" placeholder="Password" type="password" />
-        <Link href={Routes.ForgotPasswordPage()}>
-          <a>Forgot your password?</a>
-        </Link>
+        <FormTextField name="email" label="Email" placeholder="Email" />
+        <FormTextField name="password" label="Password" placeholder="Password" type="password" />
       </Form>
       <span className="mt-4">
         Or{" "}

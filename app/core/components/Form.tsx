@@ -2,6 +2,7 @@ import { ReactNode, PropsWithoutRef } from "react";
 import { Form as FinalForm, FormProps as FinalFormProps } from "react-final-form";
 import { z } from "zod";
 import { validateZodSchema } from "blitz";
+import { Button } from "@material-ui/core";
 export { FORM_ERROR } from "final-form";
 
 export interface FormProps<S extends z.ZodType<any, any>>
@@ -30,19 +31,18 @@ export function Form<S extends z.ZodType<any, any>>({
       onSubmit={onSubmit}
       render={({ handleSubmit, submitting, submitError }) => (
         <form onSubmit={handleSubmit} className="gap-4 flex flex-col w-full" {...props}>
-          {/* Form fields supplied as children are rendered here */}
           {children}
 
           {submitError && (
-            <div role="alert" style={{ color: "red" }}>
+            <p role="alert" style={{ color: "red" }}>
               {submitError}
-            </div>
+            </p>
           )}
 
           {submitText && (
-            <button type="submit" disabled={submitting}>
+            <Button variant="contained" type="submit" disabled={submitting}>
               {submitText}
-            </button>
+            </Button>
           )}
         </form>
       )}

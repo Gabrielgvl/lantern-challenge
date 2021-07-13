@@ -1,4 +1,4 @@
-import { Autocomplete, ListItem } from "@material-ui/core";
+import { Autocomplete, Button, ListItem } from "@material-ui/core";
 import getCurrencies from "app/currencies/queries/getCurrencies";
 import { Link, Routes, useInfiniteQuery, useRouter } from "blitz";
 import {
@@ -20,12 +20,12 @@ import useDebounce from "app/core/hooks/useDebounce";
 import { Currency } from "db";
 
 interface CurrencySelectProps {
-  name?: string;
+  name: string;
 }
 
 const Loading = () => <div>⏳ Loading...</div>;
 
-interface CurrencySelectInput {
+interface CurrencySelectInputProps extends CurrencySelectProps {
   allCurrencies: Currency[];
   fetchNextPage: () => void;
   hasNextPage: boolean;
@@ -33,18 +33,19 @@ interface CurrencySelectInput {
   setFilter: Dispatch<SetStateAction<string>>;
 }
 
-const CurrencySelectInput: FC<CurrencySelectInput> = ({
+const CurrencySelectInput: FC<CurrencySelectInputProps> = ({
   allCurrencies,
   fetchNextPage,
   filter,
   hasNextPage,
+  name,
   setFilter,
 }) => {
   const form = useForm();
   const {
     input,
     meta: { error, touched, submitError },
-  } = useField("defaultCurrency", { value: null });
+  } = useField(name, { value: null });
 
   const [buttonRef, setButtonRef] = useState<HTMLButtonElement | null>(null);
 
@@ -62,7 +63,7 @@ const CurrencySelectInput: FC<CurrencySelectInput> = ({
       options={allCurrencies}
       disablePortal
       onChange={(_, value) => {
-        form.change("defaultCurrency", value);
+        form.change(name, value);
       }}
       inputValue={filter}
       onInputChange={(_, value: string) => setFilter(value)}
@@ -79,9 +80,14 @@ const CurrencySelectInput: FC<CurrencySelectInput> = ({
       renderOption={(props, option) => {
         if (option.id === "last") {
           return (
-            <button type="button" ref={setButtonRef} onClick={() => fetchNextPage()}>
+            <Button
+              className="px-4"
+              type="button"
+              ref={setButtonRef}
+              onClick={() => fetchNextPage()}
+            >
               Load More
-            </button>
+            </Button>
           );
         }
         return (
@@ -113,6 +119,7 @@ const CurrencySelect: FC<CurrencySelectProps> = ({ name }) => {
       (page = { take: 20, skip: 0, filter: "" }) => ({ ...page, filter: debounceFilter }),
       {
         getNextPageParam: (lastPage) => lastPage.nextPage,
+        staleTime: Infinity,
         suspense: false,
       }
     );
@@ -126,6 +133,7 @@ const CurrencySelect: FC<CurrencySelectProps> = ({ name }) => {
       filter={filter}
       hasNextPage={!!hasNextPage}
       setFilter={setFilter}
+      name={name}
     />
   );
 };

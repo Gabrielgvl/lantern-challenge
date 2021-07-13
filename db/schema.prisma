@@ -37,8 +37,10 @@ model Session {
   publicData         String?
   privateData        String?
 
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String?
+  user    User?   @relation(fields: [userId], references: [id])
+  userId  String?
+  wallet  Wallet? @relation(fields: [waletId], references: [id])
+  waletId String?
 }
 
 model Token {
@@ -77,8 +79,10 @@ model AmountWallet {
   amount     Decimal
   currency   Currency @relation(fields: [currencyId], references: [id])
   currencyId String
-  Wallet     Wallet?  @relation(fields: [walletId], references: [id])
-  walletId   String?
+  Wallet     Wallet   @relation(fields: [walletId], references: [id])
+  walletId   String
+
+  @@unique([currencyId, walletId])
 }
 
 model Wallet {
@@ -90,4 +94,5 @@ model Wallet {
   user            User           @relation(fields: [userId], references: [id])
   userId          String
   amount          AmountWallet[]
+  Session         Session[]
 }
