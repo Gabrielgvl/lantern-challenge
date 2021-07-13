@@ -1,0 +1,12 @@
+.navlink {
+  @apply px-4 py-2 flex items-center relative focus-visible:bg-gray-200 focus-visible:animate-pulse hover:bg-indigo-600 transition-all rounded;
+}
+
+.navlink::after {
+  content: "";
+  @apply w-0 border-b-4 border-indigo-600 absolute left-0 h-1 bottom-0 transition-all duration-300;
+}
+
+.navlink.--active::after {
+  @apply w-full;
+}

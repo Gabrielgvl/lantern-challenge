@@ -8,7 +8,7 @@ import {
   useQueryErrorResetBoundary,
 } from "blitz";
 import LoginForm from "app/auth/components/LoginForm";
-
+import { StyledEngineProvider } from "@material-ui/core/styles";
 import "app/core/styles/index.css";
 import muiTheme from "app/core/styles/muiTheme";
 import { ThemeProvider } from "@material-ui/core";
@@ -21,7 +21,10 @@ export default function App({ Component, pageProps }: AppProps) {
       FallbackComponent={RootErrorFallback}
       onReset={useQueryErrorResetBoundary().reset}
     >
-      <ThemeProvider theme={muiTheme}>{getLayout(<Component {...pageProps} />)}</ThemeProvider>
+      <ThemeProvider theme={muiTheme}>
+        <StyledEngineProvider injectFirst />
+        {getLayout(<Component {...pageProps} />)}
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }
