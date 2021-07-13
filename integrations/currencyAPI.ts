@@ -58,7 +58,6 @@ export const getSymbols = async () => {
 };
 
 export const getTotal = async (base: string, symbols: Map<string, Decimal>): Promise<number> => {
-  return 0;
   if (!symbols.size) {
     return 0;
   }

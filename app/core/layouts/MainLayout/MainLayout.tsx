@@ -16,7 +16,7 @@ const MainLayout = ({ title, children, authenticated = true }: LayoutProps) => {
         <title>{title || "lantern-wallet"}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header authenticated={authenticated} />
+      <Header />
       <main className="m-auto container grid grid-cols-1 gap-4">{children}</main>
     </>
   );
