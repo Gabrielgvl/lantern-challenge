@@ -63,13 +63,15 @@ enum TokenType {
 }
 
 model Currency {
-  id           String         @id @default(uuid())
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  symbol       String         @unique
-  description  String
-  AmountWallet AmountWallet[]
-  Wallet       Wallet[]
+  id              String         @id @default(uuid())
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  symbol          String         @unique
+  description     String
+  AmountWallet    AmountWallet[]
+  Wallet          Wallet[]
+  ToTransaction   Transaction[]  @relation("to")
+  FromTransaction Transaction[]  @relation("from")
 }
 
 model AmountWallet {
@@ -95,4 +97,19 @@ model Wallet {
   userId          String
   amount          AmountWallet[]
   Session         Session[]
+  Transaction     Transaction[]
+}
+
+model Transaction {
+  id             String   @id @default(uuid())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  amount         Float
+  from           Currency @relation("from", fields: [fromCurrencyId], references: [id])
+  fromCurrencyId String
+  to             Currency @relation("to", fields: [toCurrencyId], references: [id])
+  toCurrencyId   String
+  isDeposit      Boolean
+  wallet         Wallet   @relation(fields: [walletId], references: [id])
+  walletId       String
 }

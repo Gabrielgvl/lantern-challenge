@@ -1,4 +1,4 @@
-import { FC, memo, useState, MouseEvent, MouseEventHandler } from "react";
+import { FC, memo, useState, MouseEventHandler } from "react";
 
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import { Routes, useMutation, useRouter } from "blitz";
@@ -37,7 +37,6 @@ const UserMenu: FC = () => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>Default Currency</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </>
