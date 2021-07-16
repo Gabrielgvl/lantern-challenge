@@ -51,6 +51,7 @@
   "devDependencies": {
     "@types/preview-email": "2.0.1",
     "@types/react": "17.0.14",
+    "benny": "3.6.15",
     "eslint": "7.30.0",
     "husky": "6.0.0",
     "lint-staged": "10.5.4",

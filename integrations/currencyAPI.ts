@@ -27,7 +27,7 @@ interface Rates {
   };
 }
 
-interface LatestResponse {
+interface RatesResponse {
   amount: string;
   base_currency_code: string;
   base_currency_name: string;
@@ -57,20 +57,8 @@ export const getSymbols = async () => {
   return null;
 };
 
-const convertValue = async (
-  from: string,
-  symbols: string[] | string,
-  amount: number
-): Promise<Rates> => {
-  if (!symbols.length) {
-    throw new Error("Must send at least one symbol");
-  }
-  const [err, response] = await to(
-    axiosInstance.get<LatestResponse>("/convert", {
-      params: { from, to: symbols, amount },
-    })
-  );
-
+export const getRates = async () => {
+  const [err, response] = await to(axiosInstance.get<RatesResponse>("/convert"));
   if (!response) {
     throw err;
   }
@@ -78,37 +66,12 @@ const convertValue = async (
   const { data } = response;
 
   if (data.status === "success") {
-    return response.data.rates;
+    return Object.entries(data.rates).map(([symbol, rate]) => ({
+      symbol,
+      description: rate.currency_name,
+      rate: new Decimal(rate.rate),
+    }));
   }
 
   throw new Error(data.message);
-};
-
-export const getConvertedValue = async (
-  from: string,
-  symbol: string,
-  amount: number
-): Promise<number> => {
-  const rates = await convertValue(from, symbol, amount);
-
-  const convertedCurrency = rates[symbol];
-
-  if (!convertedCurrency) {
-    throw new Error("Failed to convert currency");
-  }
-
-  return parseFloat(convertedCurrency.rate);
-};
-
-export const getTotal = async (base: string, symbols: Map<string, Decimal>): Promise<number> => {
-  if (!symbols.size) {
-    return 0;
-  }
-
-  const rates = await convertValue(base, Array.from(symbols.keys()), 1);
-
-  return Object.entries(rates).reduce(
-    (total, [symbol, val]) => total + (symbols.get(symbol)?.toNumber() || 0) / parseFloat(val.rate),
-    0
-  );
 };

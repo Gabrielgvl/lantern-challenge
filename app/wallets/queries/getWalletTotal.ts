@@ -1,8 +1,6 @@
 import { Decimal } from "@prisma/client/runtime";
-import to from "await-to-js";
 import { resolver, NotFoundError } from "blitz";
 import db from "db";
-import { getTotal } from "integrations/currencyAPI";
 import { z } from "zod";
 
 const GetWalletTotal = z.object({
@@ -12,17 +10,47 @@ const GetWalletTotal = z.object({
 export default resolver.pipe(resolver.zod(GetWalletTotal), resolver.authorize(), async ({ id }) => {
   const wallet = await db.wallet.findFirst({
     where: { id },
-    include: { defaultCurrency: true, amount: { include: { currency: true } } },
+    include: {
+      defaultCurrency: {
+        include: {
+          Rate: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+          },
+        },
+      },
+      amount: {
+        include: {
+          currency: {
+            select: {
+              Rate: {
+                orderBy: { createdAt: "desc" },
+                take: 1,
+              },
+            },
+          },
+        },
+      },
+    },
   });
 
-  if (!wallet) throw new NotFoundError();
+  const defaultRate = wallet?.defaultCurrency.Rate[0]?.rate;
 
-  const symbols = new Map<string, Decimal>(wallet.amount.map((w) => [w.currency.symbol, w.amount]));
+  if (!wallet || !defaultRate) throw new NotFoundError();
 
-  const total = await getTotal(wallet.defaultCurrency.symbol, symbols);
+  const total = wallet.amount.reduce(
+    (total, amount) =>
+      amount.amount
+        .dividedBy(amount.currency.Rate[0]?.rate || 0)
+        .times(defaultRate)
+        .add(total),
+    new Decimal(0)
+  );
+
+  const { Rate, ...defaultCurrency } = wallet.defaultCurrency;
 
   return {
-    total: total,
-    defaultCurrency: wallet.defaultCurrency,
+    total: total.toNumber(),
+    defaultCurrency: defaultCurrency,
   };
 });

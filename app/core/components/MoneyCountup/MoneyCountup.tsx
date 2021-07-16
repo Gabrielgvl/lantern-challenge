@@ -1,5 +1,6 @@
 import { FC } from "react";
 import useContUpPrevious from "app/core/hooks/useCountUpPrevious";
+import formatCurrency from "app/core/utils/formatCurrency";
 
 interface MoneyCountupProps
   extends React.DetailedHTMLProps<React.DataHTMLAttributes<HTMLDataElement>, HTMLDataElement> {
@@ -9,15 +10,7 @@ interface MoneyCountupProps
 
 const MoneyCountup: FC<MoneyCountupProps> = ({ value, currency, ...props }) => {
   const { countUp } = useContUpPrevious(value, { decimals: 2, duration: 0.5 });
-  return (
-    <data {...props}>
-      {Intl.NumberFormat("lookup", {
-        style: currency ? "currency" : "decimal",
-        currency,
-        minimumFractionDigits: 2,
-      }).format(countUp as number)}
-    </data>
-  );
+  return <data {...props}>{formatCurrency(countUp as number, currency)}</data>;
 };
 
 export default MoneyCountup;

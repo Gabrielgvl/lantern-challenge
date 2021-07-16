@@ -7,13 +7,29 @@ import { IconButton, Skeleton } from "@material-ui/core";
 import MoneyCountup from "app/core/components/MoneyCountup";
 import { useQuery } from "blitz";
 import SkeletonArray from "app/core/components/SkeletonArray";
+import useModal from "app/core/hooks/useModal";
+import ExchangeModal from "../ExchangeModal";
+import { useState } from "react";
+import { Currency } from "db";
 
 interface AmountListProps {
   walletId: string;
 }
 
+export interface Amount {
+  amount: number;
+  id: string;
+  currency: Currency;
+}
+
 const List: FC<AmountListProps> = ({ walletId }) => {
+  const [amount, setAmount] = useState<Amount>();
   const [wallet] = useQuery(getWalletAmounts, { id: walletId });
+
+  const handleCloseModal = () => {
+    setAmount(undefined);
+  };
+
   return (
     <>
       {wallet.amount.map((a) => (
@@ -26,7 +42,7 @@ const List: FC<AmountListProps> = ({ walletId }) => {
             value={a.amount}
             className="flex-1 overflow-ellipsis overflow-hidden block"
           />
-          <IconButton size="small">
+          <IconButton onClick={() => setAmount(a)} size="small">
             <TrendingUpIcon />
           </IconButton>
           <IconButton size="small">
@@ -34,6 +50,7 @@ const List: FC<AmountListProps> = ({ walletId }) => {
           </IconButton>
         </li>
       ))}
+      <ExchangeModal handleClose={handleCloseModal} amountWallet={amount} />
     </>
   );
 };

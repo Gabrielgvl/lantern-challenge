@@ -1,7 +1,7 @@
 import { NotFoundError, resolver } from "blitz";
 import db from "db";
-import { getConvertedValue } from "integrations/currencyAPI";
 import { z } from "zod";
+import getExchangePreviewAmount from "../queries/getExchangePreviewAmount";
 import createAmountWallet from "./createAmountWallet";
 
 const ExchangeAmountWallet = z.object({
@@ -36,10 +36,13 @@ export default resolver.pipe(
       throw new NotFoundError("Currency not found!");
     }
 
-    const convertedAmount = await getConvertedValue(
-      currentAmount.currency.symbol,
-      toCurrency.symbol,
-      exchangeAmount
+    const convertedAmount = await getExchangePreviewAmount(
+      {
+        fromCurrency: currentAmount.currency.symbol,
+        toCurrency: toCurrency.symbol,
+        amount: exchangeAmount,
+      },
+      ctx
     );
 
     return await createAmountWallet({ amount: convertedAmount, currencyId: toCurrencyId }, ctx);

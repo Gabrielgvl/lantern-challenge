@@ -8,10 +8,11 @@ import { useField, useForm } from "react-final-form";
 
 interface CurrencySelectProps {
   name: string;
+  disabled?: boolean;
   inputProps?: TextFieldProps;
 }
 
-const CurrencySelectInput: FC<CurrencySelectProps> = ({ name, inputProps }) => {
+const CurrencySelectInput: FC<CurrencySelectProps> = ({ name, disabled, inputProps }) => {
   const [allCurrencies] = useQuery(
     getCurrencies,
     {},
@@ -32,6 +33,7 @@ const CurrencySelectInput: FC<CurrencySelectProps> = ({ name, inputProps }) => {
     <Autocomplete
       {...input}
       options={allCurrencies}
+      disabled={disabled}
       onChange={(_, value) => {
         form.change(name, value);
       }}
@@ -52,10 +54,10 @@ const CurrencySelectInput: FC<CurrencySelectProps> = ({ name, inputProps }) => {
   );
 };
 
-const CurrencySelect: FC<CurrencySelectProps> = ({ name, inputProps }) => {
+const CurrencySelect: FC<CurrencySelectProps> = (props) => {
   return (
     <Suspense fallback={<Skeleton variant="rectangular" height="56px" />}>
-      <CurrencySelectInput name={name} inputProps={inputProps} />
+      <CurrencySelectInput {...props} />
     </Suspense>
   );
 };

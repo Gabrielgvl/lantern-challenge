@@ -1,3 +1,4 @@
+import { Decimal } from "@prisma/client/runtime";
 import { resolver, NotFoundError } from "blitz";
 import db from "db";
 import { z } from "zod";
@@ -12,7 +13,12 @@ export default resolver.pipe(
   async ({ id }) => {
     const wallet = await db.wallet.findFirst({
       where: { id },
-      include: { amount: { select: { id: true, currency: true, amount: true } } },
+      include: {
+        amount: {
+          where: { amount: { gt: 0 } },
+          select: { id: true, currency: true, amount: true },
+        },
+      },
     });
 
     if (!wallet) throw new NotFoundError();

@@ -6,26 +6,40 @@ import {
   DialogContent,
   DialogActions,
   IconButton,
+  DialogProps,
 } from "@material-ui/core";
-import Form from "app/core/components/Form";
-import CurrencySelect from "app/core/components/CurrencySelect";
+import Form, { FormProps } from "app/core/components/Form";
 import { Close } from "@material-ui/icons";
-import { invalidateQuery, useMutation } from "blitz";
-import updateWallet from "app/wallets/mutations/updateWallet";
-import { WalletConfig } from "app/wallets/validations";
-import getWalletTotal from "app/wallets/queries/getWalletTotal";
-import { Form as FinalForm, FormProps as FinalFormProps } from "react-final-form";
 import { z } from "zod";
+import classNames from "classnames";
+import { useForm, useFormState } from "react-final-form";
 
-interface WalletConfigModalProps<S extends z.ZodType<any, any>> {
-  open: boolean;
+interface ModalActionsProps {
   handleClose: () => void;
-  title: string;
-  schema?: S;
-  onSubmit: FinalFormProps<z.infer<S>>["onSubmit"];
-  initialValues?: FinalFormProps<z.infer<S>>["initialValues"];
-  children: ReactNode;
 }
+interface WalletConfigModalProps<S extends z.ZodType<any, any>>
+  extends Omit<FormProps<S>, "submitText">,
+    ModalActionsProps {
+  open: boolean;
+  title: string;
+  children: ReactNode;
+  maxWidth?: DialogProps["maxWidth"];
+  fullScreen?: DialogProps["fullScreen"];
+}
+
+const ModalActions: FC<ModalActionsProps> = ({ handleClose }) => {
+  const { valid, submitting } = useFormState();
+  return (
+    <DialogActions>
+      <Button variant="outlined" onClick={handleClose}>
+        Cancel
+      </Button>
+      <Button type="submit" variant="contained" disabled={!valid || submitting}>
+        Save
+      </Button>
+    </DialogActions>
+  );
+};
 
 const ModalForm = <S extends z.ZodType<any, any>>({
   open,
@@ -34,27 +48,24 @@ const ModalForm = <S extends z.ZodType<any, any>>({
   schema,
   onSubmit,
   initialValues,
+  className,
+  maxWidth,
+  fullScreen,
   children,
 }: WalletConfigModalProps<S>) => {
-  const [update] = useMutation(updateWallet);
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth>
+    <Dialog open={open} fullScreen={fullScreen} onClose={handleClose} maxWidth={maxWidth} fullWidth>
       <DialogTitle className="flex justify-between items-center">
         {title}
         <IconButton onClick={handleClose}>
           <Close />
         </IconButton>
       </DialogTitle>
-      <Form onSubmit={onSubmit} initialValues={initialValues} schema={schema}>
-        <DialogContent dividers>{children}</DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button type="submit" variant="contained">
-            Save
-          </Button>
-        </DialogActions>
+      <Form onSubmit={onSubmit} initialValues={initialValues} schema={schema} className="h-full">
+        <DialogContent dividers className={classNames(className)}>
+          {children}
+        </DialogContent>
+        <ModalActions handleClose={handleClose} />
       </Form>
     </Dialog>
   );

@@ -3,7 +3,7 @@ import { ChangeEventHandler, forwardRef, PropsWithoutRef } from "react";
 import { useField } from "react-final-form";
 
 export const FormTextField = forwardRef<HTMLInputElement, TextFieldProps>(
-  ({ name, type, inputProps, ...props }, ref) => {
+  ({ name, type, inputProps, disabled, ...props }, ref) => {
     const {
       input,
       meta: { touched, error, submitError, submitting },
@@ -29,7 +29,7 @@ export const FormTextField = forwardRef<HTMLInputElement, TextFieldProps>(
         ref={ref}
         onChange={handleChange}
         name={name}
-        disabled={submitting}
+        disabled={disabled || submitting}
         error={!!normalizedError && touched}
         helperText={touched && normalizedError ? normalizedError : ""}
         inputProps={type === "currency" ? { ...inputProps, min: 0, step: 0.01 } : inputProps}
