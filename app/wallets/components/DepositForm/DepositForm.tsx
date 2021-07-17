@@ -19,13 +19,13 @@ const DepositForm: FC<DepositFormProps> = ({ walletId }) => {
     <section className="px-4 sm:w-1/2 sm:m-auto">
       <h3 className="text-xl font-bold text-center mb-4">Deposit Money</h3>
       <Form
-        onSubmit={async ({ amount, currency }, { reset }) => {
+        onSubmit={async ({ amount, currency }, { restart }) => {
           const newAmount = await createAmount({
             amount,
             currencyId: currency.id,
           });
 
-          reset();
+          restart();
 
           setQueryData(getWalletAmounts, { id: walletId }, (prevWallet) => {
             if (!prevWallet) throw new Error("Wallet is undefined");

@@ -7,7 +7,7 @@ export const Transaction = () => {
   return (
     <>
       <hgroup className="mx-4 mt-4">
-        <h1 className="text-3xl font-bold w-full sm:w-auto col-span-2">My Wallet</h1>
+        <h1 className="text-3xl font-bold w-full sm:w-auto col-span-2">Transactions</h1>
       </hgroup>
       <hr className="mx-4" />
       <TransactionsTable />
