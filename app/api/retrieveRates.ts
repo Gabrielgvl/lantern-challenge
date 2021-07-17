@@ -2,7 +2,7 @@ import db from "db";
 import { getRates, getSymbols } from "integrations/currencyAPI";
 import { CronJob } from "quirrel/blitz";
 
-export default CronJob("api/retrieveRates", "@hourly", async () => {
+export default CronJob("api/retrieveRates", "@daily", async () => {
   const rates = await getRates();
 
   if (!rates) return;

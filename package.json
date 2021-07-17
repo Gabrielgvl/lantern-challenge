@@ -5,7 +5,7 @@
     "predev": "docker-compose up -d",
     "dev": "concurrently --raw \"blitz dev\" 'quirrel'",
     "build": "blitz build",
-    "start": "blitz start",
+    "start": "blitz start && quirrel ci",
     "studio": "blitz prisma studio",
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
     "test": "jest",
