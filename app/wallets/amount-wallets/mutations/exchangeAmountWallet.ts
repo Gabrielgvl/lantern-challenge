@@ -1,8 +1,9 @@
+import createTransaction from "app/transactions/mutations/createTransaction";
 import { NotFoundError, resolver } from "blitz";
-import db from "db";
+import db, { TransactionType } from "db";
 import { z } from "zod";
-import getExchangePreviewAmount from "../queries/getExchangePreviewAmount";
-import createAmountWallet from "./createAmountWallet";
+import getExchangePreviewAmount from "../queries/getConvertedAmount";
+import createAmount from "./common/create";
 
 const ExchangeAmountWallet = z.object({
   amountWalletId: z.string(),
@@ -36,7 +37,7 @@ export default resolver.pipe(
       throw new NotFoundError("Currency not found!");
     }
 
-    const convertedAmount = await getExchangePreviewAmount(
+    const resultAmount = await getExchangePreviewAmount(
       {
         fromCurrency: currentAmount.currency.symbol,
         toCurrency: toCurrency.symbol,
@@ -45,6 +46,17 @@ export default resolver.pipe(
       ctx
     );
 
-    return await createAmountWallet({ amount: convertedAmount, currencyId: toCurrencyId }, ctx);
+    createTransaction(
+      {
+        amount: exchangeAmount,
+        resultAmount,
+        fromCurrencyId: currentAmount.currencyId,
+        toCurrencyId,
+        type: TransactionType.EXCHANGE,
+      },
+      ctx
+    );
+
+    return await createAmount({ amount: resultAmount, currencyId: toCurrencyId }, ctx);
   }
 );

@@ -10,7 +10,7 @@ const HeaderContent = () => {
 
   return (
     <>
-      {session.userId && <Sidebar />}
+      {session.walletId && <Sidebar walletId={session.walletId} />}
       <h1 className={classNames("font-bold text-xl sm:flex-1 w-auto", { "ml-8": !session.userId })}>
         Lantern Wallet
       </h1>

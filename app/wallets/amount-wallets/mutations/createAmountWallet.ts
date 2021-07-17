@@ -1,36 +1,24 @@
-import to from "await-to-js";
+import createTransaction from "app/transactions/mutations/createTransaction";
+import { CreateAmountWallet } from "app/wallets/validations";
 import { resolver } from "blitz";
-import db from "db";
-import { z } from "zod";
-
-const CreateAmountWallet = z.object({
-  amount: z.number(),
-  currencyId: z.string(),
-});
+import { TransactionType } from "db";
+import createAmount from "./common/create";
 
 export default resolver.pipe(
   resolver.zod(CreateAmountWallet),
   resolver.authorize(),
-  async (input, { session: { walletId } }) => {
-    const updatedWallet = await db.amountWallet.findFirst({
-      where: { currencyId: input.currencyId, walletId },
-      include: { currency: true },
-    });
+  async (input, ctx) => {
+    const amount = await createAmount(input, ctx);
 
-    if (!updatedWallet) {
-      const newAmount = await db.amountWallet.create({
-        data: { ...input, walletId },
-        include: { currency: true },
-      });
-      return newAmount;
-    }
-
-    return await db.amountWallet.update({
-      data: {
-        amount: updatedWallet.amount.plus(input.amount),
+    createTransaction(
+      {
+        resultAmount: input.amount,
+        toCurrencyId: input.currencyId,
+        type: TransactionType.DEPOSIT,
       },
-      where: { id: updatedWallet.id },
-      include: { currency: true },
-    });
+      ctx
+    );
+
+    return amount;
   }
 );

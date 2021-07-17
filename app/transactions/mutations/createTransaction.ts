@@ -1,20 +1,22 @@
 import { resolver } from "blitz";
-import db from "db";
+import db, { TransactionType } from "db";
 import { z } from "zod";
 
 const CreateTransaction = z.object({
-  amount: z.number(),
+  amount: z.number().optional(),
+  resultAmount: z.number(),
+  fromCurrencyId: z.string().optional(),
   toCurrencyId: z.string(),
-  fromCurrencyId: z.string(),
-  walletId: z.string(),
-  isDeposit: z.boolean(),
+  type: z.nativeEnum(TransactionType),
 });
 
 export default resolver.pipe(
   resolver.zod(CreateTransaction),
   resolver.authorize(),
-  async (input) => {
-    const transaction = await db.transaction.create({ data: input });
+  async (input, { session: { walletId } }) => {
+    const transaction = await db.transaction.create({
+      data: { ...input, walletId },
+    });
 
     return transaction;
   }

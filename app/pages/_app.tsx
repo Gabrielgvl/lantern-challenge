@@ -13,6 +13,10 @@ import "app/core/styles/index.css";
 import muiTheme from "app/core/styles/muiTheme";
 import { ThemeProvider } from "@material-ui/core";
 
+import SuperJson from "superjson";
+import { Prisma } from "db";
+SuperJson.registerClass(Prisma.Decimal, { identifier: "DecimalJS" });
+
 export default function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page);
 

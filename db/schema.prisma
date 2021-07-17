@@ -102,17 +102,23 @@ model Wallet {
 }
 
 model Transaction {
-  id             String   @id @default(uuid())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  amount         Float
-  from           Currency @relation("from", fields: [fromCurrencyId], references: [id])
-  fromCurrencyId String
-  to             Currency @relation("to", fields: [toCurrencyId], references: [id])
+  id             String          @id @default(uuid())
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  amount         Decimal?
+  resultAmount   Decimal
+  from           Currency?       @relation("from", fields: [fromCurrencyId], references: [id])
+  fromCurrencyId String?
+  to             Currency        @relation("to", fields: [toCurrencyId], references: [id])
   toCurrencyId   String
-  isDeposit      Boolean
-  wallet         Wallet   @relation(fields: [walletId], references: [id])
+  type           TransactionType
+  wallet         Wallet          @relation(fields: [walletId], references: [id])
   walletId       String
+}
+
+enum TransactionType {
+  DEPOSIT
+  EXCHANGE
 }
 
 model Rate {

@@ -4,7 +4,6 @@ import ModalForm from "app/core/components/ModalForm";
 import CurrencySelect from "app/core/components/CurrencySelect";
 import { invalidateQuery, useMutation } from "blitz";
 import { Exchange } from "app/wallets/validations";
-import getWalletTotal from "app/wallets/queries/getWalletTotal";
 import exchangeAmountWallet from "app/wallets/amount-wallets/mutations/exchangeAmountWallet";
 import FormTextField from "app/core/components/FormTextField";
 import { Skeleton, TextField, useMediaQuery } from "@material-ui/core";
@@ -33,7 +32,7 @@ const ExchangeModal: FC<ExchangeModalProps> = ({ handleClose, amountWallet }) =>
           toCurrencyId: toCurrency.id,
           exchangeAmount,
         });
-        await Promise.all([invalidateQuery(getWalletTotal), invalidateQuery(getWalletAmounts)]);
+        await invalidateQuery(getWalletAmounts);
         handleClose();
       }}
       initialValues={{ exchangeAmount: amountWallet?.amount }}

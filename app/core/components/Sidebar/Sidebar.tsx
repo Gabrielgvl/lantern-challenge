@@ -1,5 +1,5 @@
 import { Routes, Link, useSession } from "blitz";
-import { FC, useState } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import IconButton from "@material-ui/core/IconButton";
@@ -9,30 +9,41 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
 import MenuIcon from "@material-ui/icons/Menu";
+import ImportExportIcon from "@material-ui/icons/ImportExport";
 
 interface NavbarProps {
-  className?: string;
+  walletId: string;
 }
 
-const Navbar: FC<NavbarProps> = ({ className }) => {
+const Navbar: FC<NavbarProps> = ({ walletId }) => {
   const [open, setOpen] = useState(false);
-  const session = useSession();
 
-  const links = [
-    {
-      value: Routes.ShowWalletPage({ walletId: session.walletId || "" }),
-      label: "Wallet",
-      Icon: AccountBalanceWalletIcon,
+  const links = useMemo(
+    () => [
+      {
+        value: Routes.ShowWalletPage({ walletId }),
+        label: "Wallet",
+        Icon: AccountBalanceWalletIcon,
+      },
+      {
+        value: Routes.ShowTransactionsPage({ walletId }),
+        label: "Transactions",
+        Icon: ImportExportIcon,
+      },
+    ],
+    [walletId]
+  );
+
+  const toggleDrawer = useCallback(
+    (open: boolean) => (event) => {
+      if (event && event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
+        return;
+      }
+
+      setOpen(open);
     },
-  ];
-
-  const toggleDrawer = (open: boolean) => (event) => {
-    if (event && event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
-      return;
-    }
-
-    setOpen(open);
-  };
+    []
+  );
 
   return (
     <>

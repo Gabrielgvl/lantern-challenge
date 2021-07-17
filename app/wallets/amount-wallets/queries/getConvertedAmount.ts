@@ -31,6 +31,6 @@ export default resolver.pipe(
       throw new NotFoundError(`${toRate} not found`);
     }
 
-    return new Decimal(amount).dividedBy(fromRate.rate).times(toRate.rate).toNumber();
+    return new Decimal(amount).dividedBy(fromRate.rate).times(toRate.rate).toDP(2).toNumber();
   }
 );

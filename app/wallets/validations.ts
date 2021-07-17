@@ -15,3 +15,8 @@ export const Exchange = (max: number) =>
     toCurrency: Currency,
     exchangeAmount: z.number().max(max, "Insufficient Balance"),
   });
+
+export const CreateAmountWallet = z.object({
+  amount: z.number(),
+  currencyId: z.string(),
+});

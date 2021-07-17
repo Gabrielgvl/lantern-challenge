@@ -3,7 +3,7 @@ import { FC, useMemo } from "react";
 import { useQuery } from "blitz";
 import { Exchange } from "app/wallets/validations";
 import { TextField } from "@material-ui/core";
-import getExchangePreviewAmount from "app/wallets/amount-wallets/queries/getExchangePreviewAmount";
+import getConvertedAmount from "app/wallets/amount-wallets/queries/getConvertedAmount";
 import { useFormState } from "react-final-form";
 import { z } from "zod";
 import useDebounce from "app/core/hooks/useDebounce";
@@ -17,7 +17,7 @@ const PreviewField: FC<PreviewFieldProps> = ({ fromCurrency }) => {
   const debounceValues = useDebounce(values, 500);
 
   const [exchange] = useQuery(
-    getExchangePreviewAmount,
+    getConvertedAmount,
     {
       fromCurrency,
       amount: debounceValues.exchangeAmount,
