@@ -6,7 +6,9 @@ import TransactionsTable from "app/transactions/components/TransactionsTable";
 export const Transaction = () => {
   return (
     <>
-      <header className="mx-4 mt-4">oi</header>
+      <hgroup className="mx-4 mt-4">
+        <h1 className="text-3xl font-bold w-full sm:w-auto col-span-2">My Wallet</h1>
+      </hgroup>
       <hr className="mx-4" />
       <TransactionsTable />
     </>

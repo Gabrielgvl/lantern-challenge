@@ -42,7 +42,7 @@ const WalletHeader: FC<WalletHeaderProps> = ({ walletId }) => {
   const { isOpen, toggleModal, closeModal } = useModal();
 
   return (
-    <header className="px-4 pt-4 grid grid-cols-3 sm:flex sm:justify-between items-center justify-between">
+    <hgroup className="px-4 pt-4 grid grid-cols-3 sm:flex sm:justify-between items-center justify-between">
       <h1 className="text-3xl font-bold w-full sm:w-auto col-span-2">My Wallet</h1>
       <IconButton
         onClick={toggleModal}
@@ -56,7 +56,7 @@ const WalletHeader: FC<WalletHeaderProps> = ({ walletId }) => {
           <TotalField walletId={walletId} isOpen={isOpen} closeModal={closeModal} />
         </Suspense>
       </h2>
-    </header>
+    </hgroup>
   );
 };
 

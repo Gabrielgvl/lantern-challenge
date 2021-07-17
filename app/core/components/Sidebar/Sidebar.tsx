@@ -1,4 +1,4 @@
-import { Routes, Link, useSession } from "blitz";
+import { Routes, Link } from "blitz";
 import { FC, useCallback, useMemo, useState } from "react";
 
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
@@ -59,7 +59,7 @@ const Navbar: FC<NavbarProps> = ({ walletId }) => {
         <List>
           {links.map((link) => (
             <Link href={link.value} key={link.value.pathname}>
-              <ListItem button>
+              <ListItem button onClick={() => setOpen(false)}>
                 <ListItemIcon>{<link.Icon />}</ListItemIcon>
                 <ListItemText primary={link.label} />
               </ListItem>
