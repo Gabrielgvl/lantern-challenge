@@ -46,7 +46,7 @@ const WalletHeader: FC<WalletHeaderProps> = ({ walletId }) => {
       <h1 className="text-3xl font-bold w-full sm:w-auto col-span-2">My Wallet</h1>
       <IconButton
         onClick={toggleModal}
-        className="justify-self-end row-span-2 sm:row-span-1 self-center sm:flex-grow sm:justify-self-end sm:order-last"
+        className="justify-self-end row-span-2 sm:row-span-1 self-center sm:justify-self-end sm:order-last"
       >
         <SettingsIcon />
       </IconButton>
