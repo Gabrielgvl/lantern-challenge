@@ -1,4 +1,5 @@
-// import db from "./index"
+import db from "db";
+import { integrateRatesAndCurrencies } from "integrations/currencyAPI";
 
 /*
  * This seed function is executed when you run `blitz db seed`.
@@ -8,9 +9,10 @@
  * realistic data.
  */
 const seed = async () => {
-  // for (let i = 0; i < 5; i++) {
-  //   await db.project.create({ data: { name: "Project " + i } })
-  // }
-}
+  const countCurrencies = db.currency.count();
+  if (countCurrencies === 0) {
+    await integrateRatesAndCurrencies();
+  }
+};
 
-export default seed
+export default seed;

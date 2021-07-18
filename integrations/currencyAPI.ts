@@ -1,6 +1,7 @@
 import { Decimal } from "@prisma/client/runtime";
 import to from "await-to-js";
 import axios from "axios";
+import db from "db";
 import qs from "query-string";
 
 const axiosInstance = axios.create({
@@ -74,4 +75,21 @@ export const getRates = async () => {
   }
 
   throw new Error(data.message);
+};
+
+export const integrateRatesAndCurrencies = async () => {
+  const rates = await getRates();
+  if (!rates) return;
+
+  const currencyBatch = await db.currency.createMany({
+    data: rates.map((r) => ({ symbol: r.symbol, description: r.description })),
+    skipDuplicates: true,
+  });
+
+  const rateBatch = await db.rate.createMany({
+    data: rates.map((r) => ({ rate: r.rate, currencySymbol: r.symbol })),
+  });
+
+  console.info(`Added ${currencyBatch.count} currencies`);
+  console.info(`Added ${rateBatch.count} rates`);
 };
