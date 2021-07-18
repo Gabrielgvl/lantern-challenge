@@ -17,7 +17,7 @@ const MainLayout = ({ title, children, authenticated = true }: LayoutProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <main className="m-auto container grid grid-cols-1 gap-4">{children}</main>
+      <main className="m-auto container grid grid-cols-1 gap-4 p-4">{children}</main>
     </>
   );
 };

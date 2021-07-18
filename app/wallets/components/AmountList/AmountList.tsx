@@ -1,13 +1,11 @@
 import { FC, Suspense } from "react";
 
 import getWalletAmounts from "app/wallets/queries/getWalletAmounts";
-import TrendingUpIcon from "@material-ui/icons/TrendingUp";
-import AddIcon from "@material-ui/icons/Add";
+import ImportExportIcon from "@material-ui/icons/ImportExport";
 import { IconButton, Skeleton } from "@material-ui/core";
 import MoneyCountup from "app/core/components/MoneyCountup";
 import { useQuery } from "blitz";
 import SkeletonArray from "app/core/components/SkeletonArray";
-import useModal from "app/core/hooks/useModal";
 import ExchangeModal from "../ExchangeModal";
 import { useState } from "react";
 import { Currency } from "db";
@@ -43,10 +41,7 @@ const List: FC<AmountListProps> = ({ walletId }) => {
             className="flex-1 overflow-ellipsis overflow-hidden block"
           />
           <IconButton onClick={() => setAmount(a)} size="small">
-            <TrendingUpIcon />
-          </IconButton>
-          <IconButton size="small">
-            <AddIcon />
+            <ImportExportIcon />
           </IconButton>
         </li>
       ))}

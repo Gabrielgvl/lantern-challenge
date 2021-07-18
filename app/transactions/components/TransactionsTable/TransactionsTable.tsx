@@ -6,12 +6,14 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import { useState } from "react";
+import { FC, useState } from "react";
 import getTransactions from "app/transactions/queries/getTransactions";
-import { usePaginatedQuery, useRouter } from "blitz";
+import { usePaginatedQuery, useRouter, Link, Routes } from "blitz";
 import formatCurrency from "app/core/utils/formatCurrency";
 import { TransactionType } from "db";
 import { Decimal } from "@prisma/client/runtime";
+import SkeletonArray from "app/core/components/SkeletonArray";
+import { Skeleton } from "@material-ui/core";
 
 interface Currency {
   symbol: string;
@@ -74,32 +76,53 @@ const columns: Column<keyof Data>[] = [
   }),
 ];
 
-export default function TransactionsTable() {
+interface TransationTableProps {
+  walletId: string;
+}
+
+const TransactionsTable: FC<TransationTableProps> = ({ walletId }) => {
   const router = useRouter();
   const page = Number(router.query.page) || 0;
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const [{ transactions, count }] = usePaginatedQuery(getTransactions, {
-    skip: rowsPerPage * page,
-    take: rowsPerPage,
-  });
+  const [response] = usePaginatedQuery(
+    getTransactions,
+    {
+      skip: rowsPerPage * page,
+      take: rowsPerPage,
+    },
+    { suspense: false }
+  );
+
+  const { transactions, count } = response || {};
 
   const handleChangePage = (_: unknown, newPage: number) => {
-    const { walletId } = router.params;
     router.push({ query: { page: newPage, walletId } });
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(+event.target.value);
-    const { walletId } = router.params;
     router.push({ query: { page: 0, walletId } });
   };
 
+  if (count === 0) {
+    return (
+      <section className="justify-self-center text-center flex flex-col gap-4">
+        <h3 className="text-xl font-bold">
+          It looks like you haven&apos;t made any transactions yet.
+        </h3>
+        <Link href={Routes.ShowWalletPage({ walletId })} passHref>
+          <a className="underline">Click here to start using your wallet!</a>
+        </Link>
+      </section>
+    );
+  }
+
   return (
     <Paper className="mx-4 mb-4">
-      <TableContainer className="max-h-96">
-        <Table stickyHeader aria-label="sticky table">
+      <TableContainer>
+        <Table>
           <TableHead>
             <TableRow>
               {columns.map((column) => (
@@ -110,27 +133,43 @@ export default function TransactionsTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {transactions.map((t) => {
-              return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={t.id}>
-                  {columns.map((column) => {
-                    const value = t[column.id];
-                    return (
-                      <TableCell key={column.id} className={column.className}>
-                        {column.format ? column.format(value) : value}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
+            {transactions ? (
+              transactions.map((t) => {
+                return (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={t.id}>
+                    {columns.map((column) => {
+                      const value = t[column.id];
+                      return (
+                        <TableCell key={column.id} className={column.className}>
+                          {column.format ? column.format(value) : value}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              })
+            ) : (
+              <SkeletonArray
+                component={
+                  <TableRow hover role="checkbox" tabIndex={-1}>
+                    {columns.map((column) => {
+                      return (
+                        <TableCell key={column.id} className={column.className}>
+                          <Skeleton width="100%" />
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                }
+              />
+            )}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={count}
+        count={count || 0}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -138,4 +177,6 @@ export default function TransactionsTable() {
       />
     </Paper>
   );
-}
+};
+
+export default TransactionsTable;

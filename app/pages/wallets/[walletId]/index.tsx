@@ -29,6 +29,7 @@ const ShowWalletPage: BlitzPage = () => {
   );
 };
 
+ShowWalletPage.authenticate = true;
 ShowWalletPage.getLayout = (page) => <Layout title="My Wallet">{page}</Layout>;
 
 export default ShowWalletPage;
