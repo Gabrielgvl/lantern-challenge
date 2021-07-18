@@ -9,7 +9,7 @@ import { integrateRatesAndCurrencies } from "integrations/currencyAPI";
  * realistic data.
  */
 const seed = async () => {
-  const countCurrencies = db.currency.count();
+  const countCurrencies = await db.currency.count();
   if (countCurrencies === 0) {
     await integrateRatesAndCurrencies();
   }
