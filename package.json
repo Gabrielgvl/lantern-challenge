@@ -2,7 +2,7 @@
   "name": "lantern-wallet",
   "version": "1.0.0",
   "scripts": {
-    "predev": "docker-compose up -d",
+    "predev": "docker-compose up -d && blitz prisma db push",
     "dev": "concurrently --raw \"blitz dev\" 'quirrel'",
     "build": "blitz build",
     "prestart": "blitz db seed",
