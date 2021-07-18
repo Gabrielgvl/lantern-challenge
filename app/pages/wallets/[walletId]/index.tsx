@@ -7,7 +7,7 @@ import DepositForm from "app/wallets/components/DepositForm";
 
 export const Wallet = () => {
   const walletId = useParam("walletId", "string");
-
+  console.debug({ walletId });
   if (!walletId) return null;
 
   return (
