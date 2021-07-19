@@ -11,7 +11,7 @@ You will need docker-compose to run the postgres database.
 Run your app in the development mode.
 
 ```
-blitz dev
+yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
